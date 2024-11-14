@@ -32,6 +32,8 @@ public extension CameraManager {
         if let focusImage { self.cameraFocusView.image = focusImage }
         if let focusImageColor { self.cameraFocusView.tintColor = focusImageColor }
         if let focusImageSize { self.cameraFocusView.frame.size = .init(width: focusImageSize, height: focusImageSize) }
+        
+        self.requireMicrophoneUsage = requireMicrophoneUsage
     }
 }
 private extension CameraManager.Attributes {
