@@ -24,7 +24,8 @@ public extension CameraManager {
         isGridVisible: Bool? = nil,
         focusImage: UIImage? = nil,
         focusImageColor: UIColor? = nil,
-        focusImageSize: CGFloat? = nil
+        focusImageSize: CGFloat? = nil,
+        requireMicrophoneUsage: Bool = true
     ) {
         self.init(.init(outputType, cameraPosition, cameraFilters, resolution, frameRate, flashMode, isGridVisible))
 

@@ -78,6 +78,7 @@ public class CameraManager: NSObject, ObservableObject { init(_ attributes: Attr
     private(set) var frameOrientation: CGImagePropertyOrientation = .right
     private(set) var orientationLocked: Bool = false
     private(set) var initialAttributes: Attributes
+    var requireMicrophoneUsage: Bool = true
 }
 
 // MARK: - Cancellation
@@ -170,7 +171,9 @@ private extension CameraManager {
     func checkPermissions() { Task { @MainActor in
         do {
             try await checkPermissions(.video)
-            try await checkPermissions(.audio)
+            if requireMicrophoneUsage {
+                try await checkPermissions(.audio)
+            }
             animateCameraViewEntrance()
         } catch { attributes.error = error as? Error }
     }}
@@ -212,12 +215,16 @@ private extension CameraManager {
     func initialiseDevices() {
         frontCamera = .default(.builtInWideAngleCamera, for: .video, position: .front)
         backCamera = .default(for: .video)
-        microphone = .default(for: .audio)
+        if requireMicrophoneUsage {
+            microphone = .default(for: .audio)
+        }
     }
     func initialiseInputs() {
         frontCameraInput = .init(frontCamera)
         backCameraInput = .init(backCamera)
-        audioInput = .init(microphone)
+        if requireMicrophoneUsage {
+            audioInput = .init(microphone)
+        }
     }
     func initialiseOutputs() {
         photoOutput = .init()
@@ -232,7 +239,9 @@ private extension CameraManager {
     }
     func setupDeviceInputs() throws {
         try setupCameraInput(attributes.cameraPosition)
-        try setupInput(audioInput)
+        if requireMicrophoneUsage {
+            try setupInput(audioInput)
+        }
     }
     func setupDeviceOutput() throws {
         try setupCameraOutput(attributes.outputType)
